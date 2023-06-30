@@ -114,3 +114,40 @@ void ll_merge(struct Node* head, struct Node* tail)
     head = ll_tail(head);
     head->next = tail;
 }
+
+struct Node* ll_access(struct Node* head, int pos)
+{
+    if (head == NULL) {
+        return head;
+    }
+
+    for (int i = 0; i < pos; i++) {
+        head = head->next;
+    }
+    return head;
+}
+
+/***
+    Description: Split a list
+    pos: from 1->N-1: return tail
+         else: keep head and return NULL
+    Return: tail
+***/
+struct Node* ll_split(struct Node* head, int pos)
+{
+    struct Node* ret;
+    int len = ll_length(head);
+
+    if ((len < 1) || (pos < 1) || (pos >= len)) {
+        return NULL;
+    }
+
+    pos = pos - 1;
+    head = ll_access(head, pos);
+    ret = head->next;
+
+    head->next = NULL;
+    return ret;
+}
+
+

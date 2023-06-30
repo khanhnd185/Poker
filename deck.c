@@ -59,3 +59,54 @@ void print_hand(struct Node* hand)
 
     printf("\n");
 }
+
+struct Node* overhand_shuffle(struct Node* deck, int pos)
+{
+    struct Node* cards = ll_split(deck, pos);
+    ll_merge(cards, deck);
+    return cards;
+}
+
+struct Node* riffle_shuffle(struct Node* deck)
+{
+    int len = ll_length(deck);
+    int pos = (len >> 1) | (len & 1);
+
+    struct Node* first = deck;
+    struct Node* second = ll_split(first, pos);
+    struct Node* tmp;
+
+    while (second != NULL) {
+        tmp = second->next;
+        second->next = first->next;
+        first->next = second;
+        first = second->next;
+        second = tmp;
+    }
+
+    return deck;
+}
+
+struct Node* deal_cards(struct Node* deck, struct Node** hands, int num_hands, int num_cards)
+{
+    struct Node *card, *remain;
+    int len = ll_length(deck);
+
+    len = len - 1;
+    remain = deck;
+    for (int i = 0; i < num_cards; i++) {
+        for (int j = 0; j < num_hands; j++) {
+            card = ll_split(remain, len);
+            len--;
+            card->next = hands[j];
+            hands[j] = card;
+        }
+    }
+    return remain;
+}
+
+void int2card(int in, struct Card* out)
+{
+    out->rank = (in >> 4) % enNumRank;
+    out->suit = (in & 15) % enNumSuit;
+}
